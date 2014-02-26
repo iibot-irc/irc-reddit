@@ -9,4 +9,6 @@ In your cron put a line like
 
 This will grab the "Hot" posts from `r/programming` and send them to #mychannel.
 
-The state is maintained in `~/etc/reddit-SUBREDDITNAME-CHANNEL-storyids` *TODO* make that file not grow without bound.
+The state is maintained in `~/state/reddit-SUBREDDITNAME-CHANNEL-storyids` *TODO* make that file not grow without bound.
+
+This requires the `jq` command, available from your favourite package manager or https://github.com/stedolan/jq
