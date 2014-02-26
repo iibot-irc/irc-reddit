@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+REDDIT=$1
+CHANNEL=$2
+FEED=$3
+
+STATEFILE="$HOME/state/reddit-$CHANNEL-$REDDIT-storyids"
+
+curl http://www.reddit.com/r/$REDDIT/$3.json | $HOME/bin/jq -S '.data.children[].data | {id, domain, title, url, permalink}' | sed -e 's/^[^:]*: "//' | sed -e 's/",\?//' | grep -ve '^.$' |
+while read DOMAIN; do
+	read ID;
+	read COMMENTS;
+	read TITLE;
+	read URL;
+	if [[ "$DOMAIN" == "self.$REDDIT" ]]; then
+		LOCATION="r/self.$REDDIT";
+	else
+		LOCATION="r/$REDDIT";
+	fi;
+	if [[ `grep -e "^$ID\$" $STATEFILE | wc -l` -eq "0" ]]; then
+		echo -e "\x0305"$LOCATION"\x0315" $TITLE"\x03" $URL > $HOME/irc/irc.freenode.net/$CHANNEL/in;
+		echo $ID >> $STATEFILE;
+	fi;
+done
