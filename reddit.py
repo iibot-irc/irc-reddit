@@ -11,7 +11,7 @@ if len(sys.argv) == 5:
   data = json.loads(open(sys.argv[4]).read())
   writer=sys.stdout
 else:
-  req = requests.get("http://www.reddit.com/r/%s/%s.json" %(REDDIT,FEED))
+  req = requests.get("http://www.reddit.com/r/%s/%s.json" %(REDDIT,FEED), headers={'User-agent': 'iibot/irc-reddit'})
   if req.status_code != 200:
     print "Kabloom!"
     print req.text
