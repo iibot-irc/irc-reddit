@@ -20,6 +20,7 @@ STATEFILE="/home/ircbot/state/reddit-%s-%s-storyids"%(CHANNEL,REDDIT)
 sf = open(STATEFILE)
 seen = set(sf.read().split("\n"))
 sf.close()
+sys.stderr.write("previously seen %d posts\n" % len(seen) )
 
 for post in reversed(data["data"]["children"]):
   post = post['data']
@@ -30,6 +31,6 @@ for post in reversed(data["data"]["children"]):
     title = post["title"]
     url = post["url"]
     if post["domain"] == "self.%s" % REDDIT:
-      print("/r/%s %s http://redd.it/%s/\n" % (REDDIT, title, id))
+      print("r/%s %s http://redd.it/%s/" % (REDDIT, title, id))
     else:
-      print("/r/%s %s %s http://redd.it/%s\n" % (REDDIT, title, url, id))
+      print("r/%s %s %s http://redd.it/%s" % (REDDIT, title, url, id))
