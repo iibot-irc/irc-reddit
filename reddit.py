@@ -11,7 +11,7 @@ if len(sys.argv) == 5:
   data = json.loads(open(sys.argv[4]).read())
   writer=sys.stdout
 else:
-  req = requests.get("http://www.reddit.com/r/%s/%s.json" %(REDDIT,FEED))
+  req = requests.get("http://www.reddit.com/r/%s/%s.json" %(REDDIT,FEED), headers={'User-agent': 'iibot/irc-reddit'})
   if req.status_code != 200:
     print "Kabloom!"
     print req.text
@@ -23,16 +23,18 @@ STATEFILE="/home/ircbot/state/reddit-%s-%s-storyids"%(CHANNEL,REDDIT)
 sf = open(STATEFILE)
 seen = set(sf.read().split("\n"))
 sf.close()
+print "Previously seen %d posts"%len(seen)
 
 new=[]
 for post in data["data"]["children"]:
   post = post['data']
   if not post["id"] in seen:
+    print "New post", post
     writer.write(post["title"]+"\n")
     if post["domain"] == "self.%s" % REDDIT:
       writer.write(post["url"]+"\n")
     else:
-      writer.write(post["url"]+" "+post["permalink"]+"\n")
+      writer.write(post["url"]+" https://reddit.com"+post["permalink"]+"\n")
     new.append(post["id"])
 if len(new) != 0:
   f = open(STATEFILE, "a")
